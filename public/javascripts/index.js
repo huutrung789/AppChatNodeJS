@@ -1,7 +1,7 @@
 var socket = io();
 socket.on('connect', function (data) {
     console.log('New connection');
-    socket.emit('createEmail', {to: 'trung2@gmail.com', text: 'sfkljsflk'});
+    socket.emit('createEmail', {to: 'trung2@gmail.com', text: 'text demo'});
 })
 
 socket.on('disconnect', function (data) {
@@ -11,4 +11,8 @@ socket.on('disconnect', function (data) {
 socket.on('newEmail', function (data) {
     console.log('New email: ', data);
 });
+
+socket.on('createEmail', function (data) {
+    console.log('createEmail', data);
+})
 
