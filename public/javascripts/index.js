@@ -33,5 +33,6 @@ jQuery('#message-form').on('submit', function (event) {
         text: jQuery('[name=message]').val()
     }, function(data) {
         console.log(data);
+        jQuery('[name=message]').val('');
     });
 });
