@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 const  socketIO = require('socket.io');
 const http = require('http');
+var {locationMessage} = require('./public/javascripts/libs/message');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -70,6 +71,10 @@ io.on('connection', function (socket) {
        socket.broadcast.emit('newMessage', data);
 
         callback('Thank you');
+    });
+
+    socket.on('sendLocationMessage', function (message) {
+       io.emit('sendLocationMessage', locationMessage(message.longitude, message.latitude));
     });
 
     socket.on('disconnect', function (data) {

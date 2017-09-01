@@ -20,7 +20,16 @@ socket.on('createMessage', function (message) {
 
 });
 
+socket.on('sendLocationMessage', function(message) {
+    var li = jQuery('<li></li>');
+    var a = jQuery('<a target="_blank">My Location</a>');
+    a.attr('href', message.url);
+    console.log(message.url);
+    li.text(`${message.from}: `);
+    li.append(a);
+    jQuery('#message').append(li);
 
+});
 // socket.emit('createMessage', {to: 'trung2@gmail.com', text: 'new comer'}, function (message) {
 //     console.log('Sent: ', message);
 // });
@@ -34,5 +43,28 @@ jQuery('#message-form').on('submit', function (event) {
     }, function(data) {
         console.log(data);
         jQuery('[name=message]').val('');
+    });
+});
+
+var locationButton = jQuery('#send-location');
+locationButton.on('click', function () {
+    // console.log('Click send location');
+    if (!navigator.geolocation) {
+        alert('Geolocation is not supported');
+    }
+
+    navigator.geolocation.getCurrentPosition(function (location) {
+        if (location) {
+            console.log(location.coords.latitude, location.coords.longitude);
+            // alert(`${location.coords.latitude}, ${location.coords.longitude}`);
+            socket.emit('sendLocationMessage', {
+                from: 'User',
+                longitude: location.coords.longitude,
+                latitude: location.coords.latitude
+            });
+        } else {
+            alert('No location');
+        }
+
     });
 });
