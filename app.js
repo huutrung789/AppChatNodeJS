@@ -56,16 +56,20 @@ app.use(express.static(publicPath));
 
 
 io.on('connection', function (socket) {
-    console.log('User connected');
+    console.log('New User connected');
 
     //Emit single connection
-    socket.emit('newEmail', {from: 'trung@gmail.com', text: 'This is my email'});
+    socket.emit('newMessage', {from: 'Admin', text: 'Welcome to chat app'});
 
-    socket.on('createEmail', function (data) {
-       console.log('Create email: ', data);
+    socket.on('createMessage', function (data, callback) {
+       console.log('Create Message: ', data);
+
        //Broadcast event
-       // io.emit('createEmail', {data});
-       socket.broadcast.emit('createEmail', {data});
+       // io.emit('createEmail', data);
+        socket.emit('newMessage', data);
+       socket.broadcast.emit('newMessage', data);
+
+        callback('Thank you');
     });
 
     socket.on('disconnect', function (data) {
