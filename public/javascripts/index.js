@@ -1,4 +1,6 @@
 var socket = io();
+// var moment = require('moment');
+
 socket.on('connect', function (data) {
     console.log('Connected websocket');
 
@@ -9,9 +11,10 @@ socket.on('disconnect', function (data) {
 });
 
 socket.on('newMessage', function (message) {
+    var formattedTimestamp = moment(message.createAt).format('MMM Do YYYY, h:mm:ss a');
     console.log('New Message: ', message);
     var li = jQuery('<li></li>');
-    li.text(`${message.from}: ${message.text}`);
+    li.text(`${formattedTimestamp} ${message.from}: ${message.text}`);
     jQuery('#message').append(li);
 });
 
@@ -21,11 +24,12 @@ socket.on('createMessage', function (message) {
 });
 
 socket.on('sendLocationMessage', function(message) {
+    var formattedTimestamp = moment(message.createAt).format('MM Do YYYY, h:mm:ss a');
     var li = jQuery('<li></li>');
     var a = jQuery('<a target="_blank">My Location</a>');
     a.attr('href', message.url);
     console.log(message.url);
-    li.text(`${message.from}: `);
+    li.text(`${formattedTimestamp} ${message.from}: `);
     li.append(a);
     jQuery('#message').append(li);
 
@@ -40,7 +44,8 @@ jQuery('#message-form').on('submit', function (event) {
     event.preventDefault();
     socket.emit('createMessage', {
         from: 'New user',
-        text: messageTextForm.val()
+        text: messageTextForm.val(),
+        createAt: moment().valueOf()
     }, function(data) {
         console.log(data);
         messageTextForm.val('');
