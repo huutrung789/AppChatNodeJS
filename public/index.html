@@ -3,19 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome page</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
-<body>
-    <p>Welcome to my page</p>
-    <ol id="message">
+<body class="chat">
+    <div class="chat__sidebar">
+        <h3>People</h3>
+    </div>
+    <div class="chat__main">
+        <ol id="message" class="chat__messages">
 
-    </ol>
+        </ol>
+        <div class="chat__footer">
+            <form id="message-form">
+                <input name="message" type="text" placeholder="Enter message"/>
+                <button>Send</button>
+            </form>
 
-    <form id="message-form">
-        <input name="message" type="text" placeholder="Enter message"/>
-        <button>Send</button>
-    </form>
+            <button id="send-location">Send Location</button>
+        </div>
+    </div>
 
-    <button id="send-location">Send Location</button>
     <script src="/javascripts/libs/jquery-3.2.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="javascripts/index.js"></script>
