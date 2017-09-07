@@ -12,10 +12,17 @@ socket.on('disconnect', function (data) {
 
 socket.on('newMessage', function (message) {
     var formattedTimestamp = moment(message.createAt).format('MMM Do YYYY, h:mm:ss a');
-    console.log('New Message: ', message);
-    var li = jQuery('<li></li>');
-    li.text(`${formattedTimestamp} ${message.from}: ${message.text}`);
-    jQuery('#message').append(li);
+    // console.log('New Message: ', message);
+    // var li = jQuery('<li></li>');
+    // li.text(`${formattedTimestamp} ${message.from}: ${message.text}`);
+    // jQuery('#message').append(li);
+    var template = jQuery('#template-message').html();
+    var html = Mustache.render(template, {
+        text: message.text,
+        from: message.from,
+        createAt: formattedTimestamp
+    });
+    jQuery('#message').append(html);
 });
 
 socket.on('createMessage', function (message) {
