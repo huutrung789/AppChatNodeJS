@@ -3,8 +3,30 @@ var socket = io();
 
 socket.on('connect', function (data) {
     console.log('Connected websocket');
+    console.log(jQuery.deparam(window.location.search));
+    var params = jQuery.deparam(window.location.search);
+
+    if (!stringValidate(params.room) || !stringValidate(params.name)) {
+        alert('Invalid name or room');
+        window.location.href = '/';
+    } else {
+        socket.emit('join', params, function (err) {
+            if (err) {
+                alert(err);
+
+            } else {
+
+            }
+        });
+    }
 
 });
+
+
+var stringValidate = (param) => {
+    return typeof param === 'string' && param.trim().length > 0;
+};
+
 
 socket.on('disconnect', function (data) {
     console.log('Disconnected');
@@ -46,11 +68,12 @@ socket.on('sendLocationMessage', function(message) {
 // });
 
 jQuery('#message-form').on('submit', function (event) {
+    var params = jQuery.deparam(window.location.search);
     //prevent default behavior of Send button on the form
     var messageTextForm = jQuery('[name=message]');
     event.preventDefault();
     socket.emit('createMessage', {
-        from: 'New user',
+        from: params.name,
         text: messageTextForm.val(),
         createAt: moment().valueOf()
     }, function(data) {

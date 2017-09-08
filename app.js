@@ -60,21 +60,35 @@ io.on('connection', function (socket) {
     console.log('New User connected');
 
     //Emit single connection
-    socket.emit('newMessage', {from: 'Admin', text: 'Welcome to chat app'});
+    // socket.emit('newMessage', {from: 'Admin', text: 'Welcome to chat app'});
 
     socket.on('createMessage', function (data, callback) {
        console.log('Create Message: ', data);
 
        //Broadcast event
        // io.emit('createEmail', data);
-        socket.emit('newMessage', data);
+       //  socket.emit('newMessage', data);
        socket.broadcast.emit('newMessage', data);
 
         callback('Thank you');
     });
 
-    socket.on('sendLocationMessage', function (message) {
-       io.emit('sendLocationMessage', locationMessage(message.longitude, message.latitude));
+    //After login
+    socket.on('join',function (params, callback) {
+        //Check params name and room in database for authentication - then callback
+
+        //join room number to socket
+        socket.join(params.room);
+
+
+        socket.emit('newMessage', {from: 'Admin', text: 'Welcome to chat app'});
+
+        //Broadcast event room number only
+        socket.broadcast.to(params.room).emit('newMessage', {from: 'Admin', text: `${params.name} joined room ${params.room}`});
+
+        socket.on('sendLocationMessage', function (message) {
+            io.to(params.room).emit('sendLocationMessage', locationMessage(message.longitude, message.latitude));
+        });
     });
 
     socket.on('disconnect', function (data) {
